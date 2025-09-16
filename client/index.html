@@ -1,0 +1,372 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Outline</title>
+    <link rel="stylesheet" href="css/style.css">
+    <script src="https://static.zohocdn.com/catalyst/sdk/js/4.4.0/catalystWebSDK.js"></script>
+    <script src="/__catalyst/sdk/init.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
+</head>
+
+<body class="body">
+
+    <div class="document_body">
+
+        <div class="document_sidebar">
+            <div class="document_sidebar_header">
+                <div class="document_sidebar_header_text">OutLine</div>
+                <img 
+                    onclick="toggleModeBody()" 
+                    class="document_sidebar_header_img outline-icon" 
+                    src="icons/white-theme.png" 
+                    data-dark="icons/white-theme.png" 
+                    data-light="icons/black-theme.png"
+                >
+                <div class="document_mode_body">
+
+                    <button class="document_mode_btn" value="light" onclick="setTheme(this.value)">
+                        <img 
+                            class="theme-icon outline-icon" 
+                            src="icons/white-sun.png" 
+                            data-dark ="icons/white-sun.png" 
+                            data-light="icons/black-sun.png"
+                        >
+                        Light
+                    </button>
+                    
+                    <button class="document_mode_btn" value="dark" onclick="setTheme(this.value)">
+                        <img 
+                            class="theme-icon outline-icon" 
+                            src="icons/white-moon.png" 
+                            data-dark ="icons/white-moon.png" 
+                            data-light="icons/black-moon.png"
+                        >
+                        Dark
+                    </button>
+                    
+                    <button class="document_mode_btn" value="system" onclick="setTheme(this.value)">
+                        <img 
+                            class="theme-icon outline-icon" 
+                            src="icons/white-system.png" 
+                            data-dark ="icons/white-system.png" 
+                            data-light="icons/black-system.png"
+                        >
+                        System
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <div class="document_main">
+
+            <div class="document_home_body" id="document_home_body">
+                <div class="document_home_header">
+                    <div class="document_home_header_right"></div>
+                    <div class="document_home_header_left">
+                        <button class="document_home_header_add_btn" onclick="openwritter()">
+                            <img 
+                                class="document_home_header_add_img" 
+                                src="icons/white-plus.png" 
+                            >
+                            <span class="document_home_header_add_text">New Doc</span>
+                        </button>
+                    </div>
+                </div>
+                <div class="document_home_main">
+                    <div class="document_home_sub_main">
+                        <h1 class="document_home_title">Welcome</h1>
+                    </div>
+                </div>
+            </div>
+
+            <div class="document_writte_body" id="document_writte_body">
+                <div class="document_writte_header">
+                    <div class="document_writte_header_right">
+                        <div class="document_writte_header_title" onclick="openhome()">Welcome</div>
+                    </div>
+                    <div class="document_writte_header_left">
+                        
+                    </div>
+                </div>
+                <div class="document_writte_main" onscroll="checkPlusIcon() ; callShowToolbar() ;callShowToolbar()">
+
+                    <div class="document_writte_sub_main">
+
+                        <input class="document_writte_title_input" placeholder="Untitled" >
+                         
+                        <div 
+                            id="editor" 
+                            contenteditable="true" 
+                            data-placeholder="Type '/' to insert, or start writing"
+                            onkeyup="slashOpen(event); checkPlusIcon(); callShowToolbar()"
+                            oninput="togglePlaceholder()"
+                            onfocus="togglePlaceholder()"
+                            onblur="togglePlaceholder()"
+                            onclick="checkPlusIcon(); handleTableActions(event);openLink(event)"
+                            onkeydown="navigateTableCell(event); handleQuoteEnter(event)"
+                            onmouseup="callShowToolbar()"
+                        ></div>
+
+                        <!-- Slash menu -->
+                        <ul id="slash-menu" class="hidden">
+                            <li onclick="insertHeading(event, 'h1')">
+                                <span class="list_bold_text">H1</span>
+                                <span class="list_title_text">Big Heading</span>
+                            </li>
+                            <li onclick="insertHeading(event, 'h2')">
+                                <span class="list_bold_text">H2</span>
+                                <span class="list_title_text">Medium Heading</span>
+                            </li>
+                            <li onclick="insertHeading(event, 'h3')">
+                                <span class="list_bold_text">H3</span>
+                                <span class="list_title_text">Small Heading</span>
+                            </li>
+                            <li onclick="insertHeading(event, 'h4')">
+                                <span class="list_bold_text">H4</span>
+                                <span class="list_title_text">Extra Heading</span>
+                            </li>
+
+                            <hr class="list_title_hr">
+
+                            <li onclick="insertList(event, 'ul')">
+                                <img 
+                                    class="list_icon outline-icon"
+                                    src="icons/white-bulletlist.png"
+                                    data-dark="icons/white-bulletlist.png" 
+                                    data-light="icons/black-bulletlist.png"  
+                                >
+                                <span class="list_title_text">Bulleted List</span>
+                            </li>
+                            <li onclick="insertList(event, 'ol')">
+                                <img 
+                                    class="list_icon outline-icon"
+                                    src="icons/white-number-list.png"
+                                    data-dark="icons/white-number-list.png" 
+                                    data-light="icons/black-number-list.png"  
+                                >
+                                <span class="list_title_text">Ordered List</span>
+                            </li>
+
+                            <hr class="list_title_hr">
+
+                            <li onclick="insertTable(event)">
+                                <img 
+                                    class="list_icon outline-icon"
+                                    src="icons/white-table.png" 
+                                    data-dark="icons/white-table.png" 
+                                    data-light="icons/black-table.png"  
+                                >
+                                <span class="list_title_text">Table</span>
+                            </li>
+                            <li onclick="insertQuote(event)">
+                                <img 
+                                    class="list_icon outline-icon"
+                                    src="icons/white-quotes.png"
+                                    data-dark ="icons/white-quotes.png" 
+                                    data-light="icons/black-quotes.png" 
+                                >
+                                <span class="list_title_text">Quote</span>
+                            </li>
+                            <li  onclick="insertDivider(event)">
+                                <img 
+                                    class="list_icon outline-icon"
+                                    src="icons/white-divider.png"
+                                    data-dark ="icons/white-divider.png" 
+                                    data-light="icons/black-divider.png"  
+                                >
+                                <span class="list_title_text">Divider</span>
+                            </li>
+                            <li onclick="insertDateTime(event , 'date')">
+                                <img 
+                                    class="list_icon outline-icon"
+                                    src="icons/white-date.png"
+                                    data-dark ="icons/white-date.png" 
+                                    data-light="icons/black-date.png" 
+                                >
+                                <span class="list_title_text">Current Date</span>
+                            </li>
+                             <li onclick="insertDateTime(event, 'time')">
+                                <img 
+                                    class="list_icon outline-icon"
+                                    src="icons/white-time.png" 
+                                    data-dark ="icons/white-time.png" 
+                                    data-light="icons/black-time.png"
+                                >
+                                <span class="list_title_text">Current Time</span>
+                            </li>
+
+                            <li onclick="insertDateTime(event, 'datetime')">
+                                <img 
+                                    class="list_icon outline-icon"
+                                    src="icons/white-datetime.png" 
+                                    data-dark ="icons/white-datetime.png" 
+                                    data-light="icons/black-datetime.png"
+                                >
+                                <span class="list_title_text">Current Date and Time</span>
+                            </li>
+                        </ul>
+
+                        <!-- Tool Bar -->
+                        <div id="text-toolbar">
+                            <button 
+                                class="bold-btn"        
+                                onclick="makeBold()"
+                            >
+                                <img 
+                                    class="text_toolbar_img outline-icon" 
+                                    src="icons/white-bold-text.png"
+                                    data-dark ="icons/white-bold-text.png" 
+                                    data-light="icons/black-bold-text.png" 
+                                >
+                            </button>
+                            <button 
+                                class="italic-btn" 
+                                onclick="makeItalic()"
+                            >
+                                <img 
+                                    class="text_toolbar_img outline-icon"  
+                                    src="icons/white-italic.png" 
+                                    data-dark ="icons/white-italic.png" 
+                                    data-light="icons/black-italic.png"
+                                >
+                            </button>
+                            <button 
+                                class="underline-btn"   
+                                onclick="makeUnderline()"
+                            >
+                                <img 
+                                    class="text_toolbar_img outline-icon" 
+                                    src="icons/white-underline.png"
+                                    data-dark ="icons/white-underline.png" 
+                                    data-light="icons/black-underline.png"
+                                >
+                            </button>
+                            <button 
+                                class="strike-btn"      
+                                onclick="makeStrike()"
+                            >
+                                <img 
+                                    class="text_toolbar_img outline-icon" 
+                                    src="icons/white-strikethrough.png" 
+                                    data-dark ="icons/white-strikethrough.png" 
+                                    data-light="icons/black-strikethrough.png"
+                                >
+                            </button>
+                            <button 
+                                class="highlight-btn"   
+                                onclick="makeHighlight(event)"
+                            >
+                                <img 
+                                    class="text_toolbar_img outline-icon" 
+                                    src="icons/white-marker.png"
+                                    data-dark ="icons/white-marker.png" 
+                                    data-light="icons/black-marker.png" 
+                                >
+                                
+                                <div class="color-list-body">
+
+                                    <div class="color-list-item">
+                                        <div class="color-list-item-color-circle none"></div>
+                                        <div class="color-list-item-color-name">
+                                            none
+                                        </div>
+                                    </div>
+
+                                    <div class="color-list-item">
+                                        <div class="color-list-item-color-circle conal"></div>
+                                        <div class="color-list-item-color-name">
+                                            conal
+                                        </div>
+                                    </div>
+
+                                    <div class="color-list-item">
+                                        <div class="color-list-item-color-circle apricot"></div>
+                                        <div class="color-list-item-color-name">
+                                            apricot
+                                        </div>
+                                    </div>
+
+                                    <div class="color-list-item">
+                                        <div class="color-list-item-color-circle sunset"></div>
+                                        <div class="color-list-item-color-name">
+                                            sunset
+                                        </div>
+                                    </div>
+
+                                    <div class="color-list-item">
+                                        <div class="color-list-item-color-circle smoothie"></div>
+                                        <div class="color-list-item-color-name">
+                                            smoothie
+                                        </div>
+                                    </div>
+
+                                    <div class="color-list-item">
+                                        <div class="color-list-item-color-circle bubblegum"></div>
+                                        <div class="color-list-item-color-name">
+                                            bubblegum
+                                        </div>
+                                    </div>
+
+                                    <div class="color-list-item">
+                                        <div class="color-list-item-color-circle neon"></div>
+                                        <div class="color-list-item-color-name">
+                                            neon
+                                        </div>
+                                    </div>
+
+                                </div>
+                            </button>
+                            <button 
+                                class="link-btn"
+                                onclick="openLinkInput()"    
+                            >
+                                <img 
+                                    class="text_toolbar_img outline-icon" 
+                                    src="icons/white-link.png"
+                                    data-dark ="icons/white-link.png" 
+                                    data-light="icons/black-link.png"
+                                     
+                                >
+                            </button>
+                        </div>
+
+                        <!-- Url Form -->
+                        <div id="text-link-body" class="text-link-body">
+                            <form action="" class="text-link-url-form" onsubmit="insertLink(event)">
+                                <input oninput="updateNavigateBtnState()" class="text-link-url-input" type="text" placeholder="Enter a link">
+                            </form>
+                            <button class="text-link-icon-box" id="link-navigate-btn" onclick="navigateLink(event)">
+                                <img 
+                                    class="outline-icon"
+                                    src="icons/white-new-tab.png"
+                                    data-dark ="icons/white-new-tab.png" 
+                                    data-light="icons/black-new-tab.png"
+                                >
+                            </button>
+                            <button class="text-link-icon-box-2" onclick="closeLinkBody()">
+                                <img 
+                                    class="outline-icon"
+                                    src="icons/white-close.png"
+                                    data-dark ="icons/white-close.png" 
+                                    data-light="icons/black-close.png" 
+                                >
+                            </button>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+            
+        </div>
+        
+    </div>
+
+    <script  src="script/script.js"></script>
+    <!-- <script  src="script/theme.js"></script> -->
+
+</body>
+
+</html>

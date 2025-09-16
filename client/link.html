@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Link Outline</title>
+    <link rel="stylesheet" href="css/style.css">
+    <script src="https://static.zohocdn.com/catalyst/sdk/js/4.4.0/catalystWebSDK.js"></script>
+    <script src="/__catalyst/sdk/init.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
+</head>
+
+<body class="body">
+
+    <div class="document_body">
+        <div class="document_sidebar"></div>
+
+        <div class="document_main">
+
+            <div class="document_home_body" id="document_home_body">
+                <div class="document_home_header">
+                    <div class="document_home_header_right"></div>
+                    <div class="document_home_header_left">
+                        <button class="document_home_header_add_btn" onclick="openwritter()">
+                            <img class="document_home_header_add_img" src="icons/plus.png" alt="">
+                            <span class="document_home_header_add_text">New Doc</span>
+                        </button>
+                    </div>
+                </div>
+                <div class="document_home_main">
+                    <div class="document_home_sub_main">
+                        <h1 class="document_home_title">Welcome</h1>
+                    </div>
+                </div>
+            </div>
+
+            <div class="document_writte_body" id="document_writte_body">
+                <div class="document_writte_header">
+                    <div class="document_writte_header_right">
+                        <div class="document_writte_header_title" onclick="openhome()">Welcome</div>
+                    </div>
+                    <div class="document_writte_header_left">
+                        
+                    </div>
+                </div>
+                <div class="document_writte_main" onscroll="callShowToolbar()">
+
+                    <div class="document_writte_sub_main">
+
+                        <input class="document_writte_title_input" placeholder="Untitled" >
+                         
+                        <div 
+                            id="editor" 
+                            contenteditable="true" 
+                            data-placeholder="Type '/' to insert, or start writing"
+                            onmouseup="callShowToolbar()"
+                            onkeyup="callShowToolbar()"
+                            onclick="openLink(event)"                            
+                        ></div>
+
+                        <div id="text-toolbar">
+                            <button 
+                                class="bold-btn"        
+                                onclick="makeBold()"
+                            >
+                                <img class="text_toolbar_img" src="icons/bold-text-option.png" alt="">
+                            </button>
+                            <button 
+                                class="link-btn"
+                                onclick="openLinkInput()"    
+                            >
+                                <img class="text_toolbar_img" src="icons/link.png" alt="">
+                            </button>
+                        </div>
+
+                        <div id="text-link-body" class="text-link-body">
+                            <form action="" class="text-link-url-form" onsubmit="insertLink(event)">
+                                <input oninput="updateNavigateBtnState()" class="text-link-url-input" type="text" placeholder="Enter a link">
+                            </form>
+                            <button class="text-link-icon-box" id="link-navigate-btn" onclick="navigateLink(event)">
+                                <img src="icons/open.png" alt="">
+                            </button>
+                            <button class="text-link-icon-box" onclick="closeLinkBody()">
+                                <img src="icons/close.png" alt="">
+                            </button>
+                        </div>
+
+                        
+                    </div>
+                </div>
+            </div>
+            
+        </div>
+        
+    </div>
+
+    <script defer src="script/link.js"></script>
+
+</body>
+
+</html>

@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Outline</title>
+    <link rel="stylesheet" href="css/style.css">
+    <script src="https://static.zohocdn.com/catalyst/sdk/js/4.4.0/catalystWebSDK.js"></script>
+    <script src="/__catalyst/sdk/init.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
+</head>
+
+<body class="body">
+
+    <div class="document_body">
+        <div class="document_sidebar"></div>
+
+        <div class="document_main">
+
+            <div class="document_home_body" id="document_home_body">
+                <div class="document_home_header">
+                    <div class="document_home_header_right"></div>
+                    <div class="document_home_header_left">
+                        <button class="document_home_header_add_btn" onclick="openwritter()">
+                            <img class="document_home_header_add_img" src="icons/plus.png" alt="">
+                            <span class="document_home_header_add_text">New Doc</span>
+                        </button>
+                    </div>
+                </div>
+                <div class="document_home_main">
+                    <div class="document_home_sub_main">
+                        <h1 class="document_home_title">Welcome</h1>
+                    </div>
+                </div>
+            </div>
+
+            <div class="document_writte_body" id="document_writte_body">
+                <div class="document_writte_header">
+                    <div class="document_writte_header_right">
+                        <div class="document_writte_header_title" onclick="openhome()">Welcome</div>
+                    </div>
+                    <div class="document_writte_header_left">
+                        
+                    </div>
+                </div>
+                <div class="document_writte_main" onscroll="callShowToolbar()">
+
+                    <div class="document_writte_sub_main">
+
+                        <input class="document_writte_title_input" placeholder="Untitled" >
+                         
+                        <div 
+                            id="editor" 
+                            contenteditable="true" 
+                            data-placeholder="Type '/' to insert, or start writing"
+                            onmouseup="callShowToolbar()"
+                            onkeyup="callShowToolbar()"
+                            
+                        ></div>
+
+                        <div id="text-toolbar">
+                            <button 
+                                class="bold-btn"        
+                                onclick="makeBold()"
+                            >
+                                <img class="text_toolbar_img" src="icons/bold-text-option.png" alt="">
+                            </button>
+                            <button 
+                                class="italic-btn" 
+                                onclick="makeItalic()"
+                            >
+                                <img class="text_toolbar_img" src="icons/italic.png" alt="">
+                            </button>
+                            <button 
+                                class="underline-btn"   
+                                onclick="makeUnderline()"
+                            >
+                                <img class="text_toolbar_img" src="icons/underline.png" alt="">
+                            </button>
+                            <button 
+                                class="strike-btn"      
+                                onclick="makeStrike()"
+                            >
+                                <img class="text_toolbar_img" src="icons/strikethrough.png" alt="">
+                            </button>
+                            <button 
+                                class="highlight-btn"   
+                                onclick="makeHighlight(event)"
+                            >
+                                <img class="text_toolbar_img" src="icons/marker.png" alt="">
+                                
+                                <div class="color-list-body">
+
+                                    <div class="color-list-item">
+                                        <div class="color-list-item-color-circle none"></div>
+                                        <div class="color-list-item-color-name">
+                                            none
+                                        </div>
+                                    </div>
+
+                                    <div class="color-list-item">
+                                        <div class="color-list-item-color-circle conal"></div>
+                                        <div class="color-list-item-color-name">
+                                            conal
+                                        </div>
+                                    </div>
+
+                                    <div class="color-list-item">
+                                        <div class="color-list-item-color-circle apricot"></div>
+                                        <div class="color-list-item-color-name">
+                                            apricot
+                                        </div>
+                                    </div>
+
+                                    <div class="color-list-item">
+                                        <div class="color-list-item-color-circle sunset"></div>
+                                        <div class="color-list-item-color-name">
+                                            sunset
+                                        </div>
+                                    </div>
+
+                                    <div class="color-list-item">
+                                        <div class="color-list-item-color-circle smoothie"></div>
+                                        <div class="color-list-item-color-name">
+                                            smoothie
+                                        </div>
+                                    </div>
+
+                                    <div class="color-list-item">
+                                        <div class="color-list-item-color-circle bubblegum"></div>
+                                        <div class="color-list-item-color-name">
+                                            bubblegum
+                                        </div>
+                                    </div>
+
+                                    <div class="color-list-item">
+                                        <div class="color-list-item-color-circle neon"></div>
+                                        <div class="color-list-item-color-name">
+                                            neon
+                                        </div>
+                                    </div>
+
+                                </div>
+                            </button>
+                        </div>
+
+                        
+                    </div>
+                </div>
+            </div>
+            
+        </div>
+        
+    </div>
+
+    <script defer src="script/textlatest.js"></script>
+
+</body>
+
+</html>
