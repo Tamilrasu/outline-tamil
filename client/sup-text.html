@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Text Outline</title>
+    <title>Sub Outline</title>
     <link rel="stylesheet" href="css/style.css">
     <script src="https://static.zohocdn.com/catalyst/sdk/js/4.4.0/catalystWebSDK.js"></script>
     <script src="/__catalyst/sdk/init.js"></script>
@@ -56,6 +56,7 @@
                             data-placeholder="Type '/' to insert, or start writing"
                             onmouseup="callShowToolbar()"
                             onkeyup="callShowToolbar()"
+                            onclick="openLink(event)"
                             
                         ></div>
 
@@ -167,7 +168,44 @@
                                     data-light="icons/black-subscript.png" 
                                 >
                             </button>
+
+                             <button 
+                                class="link-btn"
+                                onclick="openLinkInput()"    
+                            >
+                                <img 
+                                    class="text_toolbar_img outline-icon" 
+                                    src="icons/white-link.png"
+                                    data-dark ="icons/white-link.png" 
+                                    data-light="icons/black-link.png"
+                                     
+                                >
+                            </button>
                         </div>
+
+                        <!-- Url Form -->
+                        <div id="text-link-body" class="text-link-body">
+                            <form action="" class="text-link-url-form" onsubmit="insertLink(event)">
+                                <input oninput="updateNavigateBtnState()" class="text-link-url-input" type="text" placeholder="Enter a link">
+                            </form>
+                            <button class="text-link-icon-box" id="link-navigate-btn" onclick="navigateLink(event)">
+                                <img 
+                                    class="outline-icon"
+                                    src="icons/white-new-tab.png"
+                                    data-dark ="icons/white-new-tab.png" 
+                                    data-light="icons/black-new-tab.png"
+                                >
+                            </button>
+                            <button class="text-link-icon-box-2" onclick="closeLinkBody()">
+                                <img 
+                                    class="outline-icon"
+                                    src="icons/white-close.png"
+                                    data-dark ="icons/white-close.png" 
+                                    data-light="icons/black-close.png" 
+                                >
+                            </button>
+                        </div>
+
 
                         
                     </div>
@@ -178,7 +216,7 @@
         
     </div>
 
-    <script defer src="script/textlatest.js"></script>
+    <script defer src="script/sup-text.js"></script>
 
 </body>
 

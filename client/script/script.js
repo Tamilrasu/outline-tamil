@@ -5,6 +5,7 @@ let editor = document.getElementById("editor");
 let menu = document.getElementById("slash-menu");
 let savedRange = null;
 let currentLine = null;
+let skipRestoreOnce = false;
 
 const body = document.body;
 const mq = window.matchMedia('(prefers-color-scheme: dark)');
@@ -1005,7 +1006,6 @@ function updateIconsForSystem() {
   });
 }
 
-
 // Insert Quote
 function insertQuote(event) {
   event.preventDefault();
@@ -1144,79 +1144,81 @@ function insertDivider(event) {
 }
 
 // Insert Date Time
-function insertDateTime(event, type) {
-  event.preventDefault();
-  event.stopPropagation();
+// function insertDateTime(event, type) {
+//   event.preventDefault();
+//   event.stopPropagation();  
 
-  if (!savedRange) return;
+//   if (!savedRange) return;
 
-  const sel = window.getSelection();
-  sel.removeAllRanges();
-  sel.addRange(savedRange);
+//   const sel = window.getSelection();
+//   sel.removeAllRanges();
+//   sel.addRange(savedRange);
 
-  const range = sel.getRangeAt(0);
-  let node = range.startContainer;
-  let parent = node.nodeType === Node.TEXT_NODE ? node.parentNode : node;
+//   const range = sel.getRangeAt(0);
+//   let node = range.startContainer;
+//   let parent = node.nodeType === Node.TEXT_NODE ? node.parentNode : node;
 
-  const now = new Date();
+//   const now = new Date();
 
-  // Prepare value based on type
-  let value = "";
-  if (type === "date") {
-    value = now.toLocaleDateString("en-US", {
-      year: "numeric",
-      month: "long",
-      day: "numeric",
-    });
-  } else if (type === "time") {
-    value = now.toLocaleTimeString("en-US", {
-      hour: "numeric",
-      minute: "2-digit",
-      hour12: true,
-    });
-  } else if (type === "datetime") {
-    const d = now.toLocaleDateString("en-US", {
-      year: "numeric",
-      month: "long",
-      day: "numeric",
-    });
-    const t = now.toLocaleTimeString("en-US", {
-      hour: "numeric",
-      minute: "2-digit",
-      hour12: true,
-    });
-    value = `${d} at ${t}`;
-  }
+//   // Prepare value based on type
+//   let value = "";
+//   if (type === "date") {
+//     value = now.toLocaleDateString("en-US", {
+//       year: "numeric",
+//       month: "long",
+//       day: "numeric",
+//     });
+//   } else if (type === "time") {
+//     value = now.toLocaleTimeString("en-US", {
+//       hour: "numeric",
+//       minute: "2-digit",
+//       hour12: true,
+//     });
+//   } else if (type === "datetime") {
+//     const d = now.toLocaleDateString("en-US", {
+//       year: "numeric",
+//       month: "long",
+//       day: "numeric",
+//     });
+//     const t = now.toLocaleTimeString("en-US", {
+//       hour: "numeric",
+//       minute: "2-digit",
+//       hour12: true,
+//     });
+//     value = `${d} at ${t}`;
+//   }
 
-  // Replace only the "/" near cursor
-  if (node.nodeType === Node.TEXT_NODE) {
-    const fullText = node.textContent;
-    const before = fullText.slice(0, range.startOffset);
-    const after = fullText.slice(range.startOffset);
 
-    const slashIndex = before.lastIndexOf("/");
-    if (slashIndex !== -1) {
-      const newText = before.slice(0, slashIndex) + value + after;
-      node.textContent = newText;
+//   // Replace only the "/" near cursor
+//   if (node.nodeType === Node.TEXT_NODE) {    
+//     const fullText = node.textContent;
+//     const before = fullText.slice(0, range.startOffset);
+//     const after = fullText.slice(range.startOffset);
 
-      // Caret after inserted value
-      const pos = slashIndex + value.length;
-      const newRange = document.createRange();
-      newRange.setStart(node, pos);
-      newRange.collapse(true);
-      sel.removeAllRanges();
-      sel.addRange(newRange);
-    }
-  } else {
-    parent.innerText = parent.innerText.replace("/", value);
-  }
+//     const slashIndex = before.lastIndexOf("/");
+//     if (slashIndex !== -1) {
+//       const newText = before.slice(0, slashIndex) + value + after;
+//       node.textContent = newText;
 
-  // UI cleanup
-  menu.classList.add("hidden");
-  plusIcon.style.display = "none";
-  savedRange = null;
-  editor.focus();
-}
+//       // Caret after inserted value
+//       const pos = slashIndex + value.length;
+//       const newRange = document.createRange();
+//       newRange.setStart(node, pos);
+//       newRange.collapse(true);
+//       sel.removeAllRanges();
+//       sel.addRange(newRange);
+//     }
+//   } 
+//   else {
+//     parent.innerText = parent.innerText.replace("/", value);
+//   }
+
+//   // UI cleanup
+//   menu.classList.add("hidden");
+//   plusIcon.style.display = "none";
+//   savedRange = null;
+//   editor.focus();
+// }
 
 // ------------------  Text formatting toolbar logic ------------------ 
 
@@ -1225,6 +1227,8 @@ const boldBtn = toolbar.querySelector(".bold-btn");
 const italicBtn = toolbar.querySelector(".italic-btn");
 const underlineBtn = toolbar.querySelector(".underline-btn");
 const strikeBtn = toolbar.querySelector(".strike-btn");
+const supBtn  = toolbar.querySelector(".sup-btn");
+const subBtn = toolbar.querySelector(".sub-btn");
 const highlightBtn = document.querySelector(".highlight-btn");
 const colorList = highlightBtn.querySelector(".color-list-body");
 const colorItems = colorList.querySelectorAll(".color-list-item");
@@ -1349,18 +1353,86 @@ function getHighlightColor(node) {
   return "";
 }
 
+// Superscript
+function makeSuperscript() {
+  document.execCommand("superscript", false, null);
+  updateToolbarState();
+}
+
+// Subscript
+function makeSubscript() {
+  document.execCommand("subscript", false, null);
+  updateToolbarState();
+}
+
+// Remove empty SUP/SUB/SPAN tags
+function cleanEditor() {
+  editor.querySelectorAll('sup:empty, sub:empty').forEach(el => el.remove());
+  editor.querySelectorAll('span').forEach(span => {
+
+    const styleAttr = span.getAttribute('style');
+
+    // Remove empty spans always
+    if (!span.textContent.trim()) {
+      span.remove();
+      return;
+    }
+    
+    if (!styleAttr && span.childNodes.length === 1 && span.firstChild.nodeType === Node.TEXT_NODE) {
+      const text = span.textContent;
+      const textNode = document.createTextNode(text);
+      span.replaceWith(textNode);
+    }
+    // If completely empty, remove
+    if (!span.textContent.trim()) span.remove();
+  });
+}
+
+function saveSelection() {
+  const sel = window.getSelection();
+  if (sel.rangeCount > 0) {
+    return sel.getRangeAt(0).cloneRange();
+  }
+  return null;
+}
+
+function restoreSelection(range) {
+  if (!range) return;
+  const sel = window.getSelection();
+  sel.removeAllRanges();
+  sel.addRange(range);
+}
+
+editor.addEventListener('input', () => {
+  const range = saveSelection();
+
+  setTimeout(() => {
+    cleanEditor();
+      if (!skipRestoreOnce && range) {   
+      restoreSelection(range);
+    }
+
+    skipRestoreOnce = false;
+    updateToolbarState();
+  }, 0);
+});
+
 // Update toolbar button states
 function updateToolbarState() {
+
   boldBtn.classList.toggle("active", document.queryCommandState("bold"));
   italicBtn.classList.toggle("active", document.queryCommandState("italic"));
   underlineBtn.classList.toggle("active", document.queryCommandState("underline"));
   strikeBtn.classList.toggle("active", document.queryCommandState("strikeThrough"));
+  supBtn.classList.toggle("active", document.queryCommandState("superscript"));
+  subBtn.classList.toggle("active", document.queryCommandState("subscript"));
 
   const sel = window.getSelection();
   if (sel.rangeCount > 0) {
     const color = getHighlightColor(sel.anchorNode);
     highlightBtn.style.backgroundColor = color;
   }
+  
 }
 
 // Show toolbar at selection
@@ -1508,6 +1580,7 @@ function insertLink(e) {
 
   // Clear and close
   urlInput.value = '';
+  skipRestoreOnce = true
   closeLinkBody();
 }
 
@@ -1604,6 +1677,7 @@ document.addEventListener("selectionchange", () => {
 window.addEventListener("resize", () => {
 
   callShowToolbar()
+  checkPlusIcon()
 
   if (linkBody.style.display === "flex") {
     callShowLinkBody();
@@ -1666,8 +1740,7 @@ document.addEventListener("selectionchange", () => {
 });
 
 
-
-// let currentTheme = 'system';
+// --- Theme change handling ---
 
 // // --- open / close modeBody ---
 function toggleModeBody () {
